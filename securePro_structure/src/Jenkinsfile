@@ -1,7 +1,11 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "SecurePro"
+        DOCKER_IMAGE = "secure-pro"
+        PROFILE = 'dev'
+        DB_URL = 'jdbc:oracle:thin:@localhost:1521:securepro'
+        DB_USERNAME = credentials('dev-username') // Jenkins credentials
+        DB_PASSWORD = credentials('dev-password') // Jenkins credentials
     }
     stages {
         stage('Checkout') {
@@ -11,7 +15,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh './mvnw clean package'
+                sh """
+                ./mvnw clean package \
+                    -Dspring.profiles.active=$PROFILE \
+                    -Dspring.datasource.url=$DB_URL \
+                    -Dspring.datasource.username=$DB_USERNAME \
+                    -Dspring.datasource.password=$DB_PASSWORD
+                """
             }
         }
         stage('Docker Build and Push') {
@@ -23,8 +33,22 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker-compose up -d'
+                sh """
+                docker-compose down
+                docker-compose up -d
+                """
             }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }

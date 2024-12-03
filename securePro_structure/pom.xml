@@ -11,7 +11,7 @@
 	<groupId>com.securepro</groupId>
 	<artifactId>secure</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>secure</name>
+	<name>secure-pro</name>
 	<description>a secure REST API to manage a catalog of products and their categories, using Spring Boot with stateful authentication and role-based access control</description>
 	<url/>
 	<licenses>

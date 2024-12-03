@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  app:
+    image: secure-pro:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - db
+
+  db:
+    image: gvenzl/oracle-xe
+    environment:
+      ORACLE_PASSWORD: prod_pass
+      APP_USER: prod_user
+      APP_USER_PASSWORD: prod_pass
+    ports:
+      - "1521:1521"

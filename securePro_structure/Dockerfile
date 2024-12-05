@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the application JAR
-COPY target/secure-pro.jar /app/secure-pro.jar
+COPY target/*.jar /app/secure-pro.jar
 
 # Expose the application port
 EXPOSE 8081

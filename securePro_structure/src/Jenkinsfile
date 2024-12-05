@@ -2,10 +2,11 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "secure-pro"
-        PROFILE = 'dev'
+        ENV_FILE = ".env.prod"
+        PROFILE = 'prod'
         DB_URL = 'jdbc:oracle:thin:@localhost:1521:securepro'
-        DB_USERNAME = credentials('dev-username') // Jenkins credentials
-        DB_PASSWORD = credentials('dev-password') // Jenkins credentials
+        DB_USERNAME = credentials('db-username') // Jenkins credentials for prod
+        DB_PASSWORD = credentials('db-password') // Jenkins credentials for prod
     }
     stages {
         stage('Checkout') {
@@ -27,16 +28,23 @@ pipeline {
         stage('Docker Build and Push') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").push()
+
+                    def dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
+
+                    dockerImage.push("${env.BUILD_NUMBER}")
+                    dockerImage.push("latest")
                 }
             }
         }
         stage('Deploy') {
             steps {
-                sh """
-                docker-compose down
-                docker-compose up -d
-                """
+                script {
+                    sh 'docker-compose down'
+
+                    sh """
+                    docker-compose --env-file ${ENV_FILE} up -d --build
+                    """
+                }
             }
         }
     }

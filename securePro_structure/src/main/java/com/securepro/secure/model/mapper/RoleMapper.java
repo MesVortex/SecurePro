@@ -11,4 +11,3 @@ public interface RoleMapper {
 
     RoleResponseDTO toResponse(Role entity);
 }
-

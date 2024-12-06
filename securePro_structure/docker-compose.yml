@@ -8,9 +8,10 @@ services:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - SPRING_DATASOURCE_URL=jdbc:oracle:thin:@db:1521:securepro
-      - SPRING_DATASOURCE_USERNAME=${APP_USER}
-      - SPRING_DATASOURCE_PASSWORD=${APP_USER_PASSWORD}
+#      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/securepro
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root_password
     depends_on:
       - mariadb
 
@@ -18,10 +19,10 @@ services:
     image: mariadb:latest
     container_name: securepro-mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: securepro
+      MARIADB_USER: root
+      MARIADB_PASSWORD: root_password
     ports:
       - "3306:3306"
     volumes:

@@ -7,6 +7,9 @@ target/
 # Environment variable files
 .env
 
+./src/main/resources/application-dev.properties
+./src/main/resources/application-prod.properties
+
 ### STS ###
 .apt_generated
 .classpath

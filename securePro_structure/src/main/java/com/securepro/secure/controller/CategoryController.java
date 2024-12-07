@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 

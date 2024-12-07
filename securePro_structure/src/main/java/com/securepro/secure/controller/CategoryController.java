@@ -2,6 +2,7 @@ package com.securepro.secure.controller;
 
 import com.securepro.secure.model.dto.request.CategoryRequestDTO;
 import com.securepro.secure.model.dto.response.CategoryResponseDTO;
+import com.securepro.secure.model.dto.response.ProductResponseDTO;
 import com.securepro.secure.service.interfaces.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

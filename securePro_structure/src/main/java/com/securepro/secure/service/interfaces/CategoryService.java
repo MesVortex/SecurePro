@@ -2,6 +2,7 @@ package com.securepro.secure.service.interfaces;
 
 import com.securepro.secure.model.dto.request.CategoryRequestDTO;
 import com.securepro.secure.model.dto.response.CategoryResponseDTO;
+import com.securepro.secure.model.dto.response.ProductResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

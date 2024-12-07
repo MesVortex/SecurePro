@@ -1,71 +1,67 @@
-package com.securepro.secure.service;
+package com.securepro.secure.service.impl;
 
 import com.securepro.secure.model.dto.request.CategoryRequestDTO;
 import com.securepro.secure.model.dto.response.CategoryResponseDTO;
 import com.securepro.secure.model.dto.response.ProductResponseDTO;
 import com.securepro.secure.model.entity.Category;
-import com.securepro.secure.model.entity.Product;
 import com.securepro.secure.model.mapper.CategoryMapper;
+import com.securepro.secure.model.mapper.ProductMapper;
 import com.securepro.secure.repository.CategoryRepository;
-import com.securepro.secure.repository.ProductRepository;
 import com.securepro.secure.service.interfaces.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
     private final CategoryMapper categoryMapper;
+    private final ProductMapper productMapper;
 
-    // Get all categories with pagination and sorting
     @Override
     public Page<CategoryResponseDTO> getCategories(PageRequest pageRequest) {
-        Page<Category> categories = categoryRepository.findAll(pageRequest);
-        return categories.map(category -> categoryMapper.map(category, CategoryResponseDTO.class));
+        return categoryRepository.findAll(pageRequest)
+                .map(categoryMapper::toResponse);
     }
 
-    // Search categories by name with pagination and sorting
     @Override
     public Page<CategoryResponseDTO> searchCategoriesByName(String name, PageRequest pageRequest) {
-        Page<Category> categories = categoryRepository.findByNameContaining(name, pageRequest);
-        return categories.map(category -> categoryMapper.map(category, CategoryResponseDTO.class));
+        return categoryRepository.findByNameContainingIgnoreCase(name, pageRequest)
+                .map(categoryMapper::toResponse);
     }
 
-    // Get products by category with pagination and sorting
     @Override
     public Page<ProductResponseDTO> getProductsByCategory(Long categoryId, PageRequest pageRequest) {
-        Page<Product> products = productRepository.findByCategoryId(categoryId, pageRequest);
-        return products.map(product -> categoryMapper.map(product, ProductResponseDTO.class));
+        return categoryRepository.findById(categoryId)
+                .map(category -> categoryRepository.findProductsByCategory(category, pageRequest))
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"))
+                .map(productMapper::toResponse);
     }
 
-    // Create a new category (Admin only)
     @Override
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
-        Category category = categoryMapper.map(categoryRequestDTO, Category.class);
+        Category category = categoryMapper.toEntity(categoryRequestDTO);
         category = categoryRepository.save(category);
-        return categoryMapper.map(category, CategoryResponseDTO.class);
+        return categoryMapper.toResponse(category);
     }
 
-    // Update an existing category (Admin only)
     @Override
     public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
-        categoryMapper.map(categoryRequestDTO, category); // Update category details
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        category.setName(categoryRequestDTO.name());
         category = categoryRepository.save(category);
-        return categoryMapper.map(category, CategoryResponseDTO.class);
+        return categoryMapper.toResponse(category);
     }
 
-    // Delete a category (Admin only)
     @Override
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         categoryRepository.delete(category);
     }
 }

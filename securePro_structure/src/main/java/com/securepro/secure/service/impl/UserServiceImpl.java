@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO register(UserRequestDTO userRequestDTO) {
         User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(userRequestDTO.password()));
-        user.setRoles(List.of(roleRepository.findByName("ROLE_USER").orElseThrow()));
+        user.setRoles(List.of(roleRepository.findById(userRequestDTO.roleIds().get(0)).orElseThrow()));
         user.setActive(true);
         return userMapper.toResponse(userRepository.save(user));
     }

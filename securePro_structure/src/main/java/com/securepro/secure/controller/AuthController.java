@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PutMapping("/admin/users/{id}/roles")
-    public ResponseEntity<Void> updateRoles(@PathVariable Long id, @RequestBody List<String> roles) {
+    public ResponseEntity<Void> updateRoles(@PathVariable Long id,@Valid @RequestBody List<String> roles) {
         userService.updateUserRoles(id, roles);
         return ResponseEntity.noContent().build();
     }

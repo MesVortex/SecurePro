@@ -7,6 +7,7 @@ import com.securepro.secure.model.entity.Category;
 import com.securepro.secure.model.mapper.CategoryMapper;
 import com.securepro.secure.model.mapper.ProductMapper;
 import com.securepro.secure.repository.CategoryRepository;
+import com.securepro.secure.repository.ProductRepository;
 import com.securepro.secure.service.interfaces.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final ProductMapper productMapper;
+    private final ProductRepository productRepository;
 
     @Override
     public Page<CategoryResponseDTO> getCategories(PageRequest pageRequest) {
@@ -37,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<ProductResponseDTO> getProductsByCategory(Long categoryId, PageRequest pageRequest) {
         return categoryRepository.findById(categoryId)
-                .map(category -> categoryRepository.findProductsByCategory(category, pageRequest))
+                .map(category -> productRepository.findProductsByCategory(category, pageRequest))
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"))
                 .map(productMapper::toResponse);
     }

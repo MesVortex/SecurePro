@@ -1,13 +1,5 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_IMAGE = "securepro_structure"
-        ENV_FILE = ".env"
-        PROFILE = 'prod'
-        DB_URL = 'jdbc:mariadb://mariadb:3306/securepro'
-        DB_USERNAME = credentials('db-username') // Jenkins credentials for prod
-        DB_PASSWORD = credentials('db-password') // Jenkins credentials for prod
-    }
     stages {
         stage('Checkout') {
             steps {

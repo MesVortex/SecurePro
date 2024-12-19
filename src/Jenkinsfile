@@ -9,9 +9,9 @@ pipeline {
         stage('Build') {
             steps {
                 // Fix: Ensure `mvnw` has executable permissions
-                sh 'chmod +x ./mvnw'
+                sh 'chmod +x ./securePro_structure/mvnw'
                 // Use Maven to build the project
-                sh './mvnw clean package -DskipTests'
+                sh './securePro_structure/mvnw clean package -DskipTests'
             }
         }
         stage('Docker Build and Push') {

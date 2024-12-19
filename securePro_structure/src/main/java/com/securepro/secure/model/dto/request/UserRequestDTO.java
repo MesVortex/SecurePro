@@ -8,9 +8,9 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record UserRequestDTO(
-        @NotBlank(message = "Login is required")
+        @NotBlank(message = "Username is required")
         @Size(min = 3, max = 50, message = "Login must be between 3 and 50 characters")
-        String login,
+        String username,
 
         @NotBlank(message = "Password is required")
         @Size(min = 8, message = "Password must be at least 8 characters long")

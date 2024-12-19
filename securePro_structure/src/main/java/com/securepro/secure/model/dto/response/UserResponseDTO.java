@@ -4,7 +4,7 @@ import java.util.List;
 
 public record UserResponseDTO(
         Long id,
-        String login,
+        String username,
         boolean active,
         List<String> roles
 ) {}

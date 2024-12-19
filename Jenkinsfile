@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    tools {
+            maven 'Maven'
+            jdk 'JDK'
+           dockerTool 'Docker'
+       }
+
     stages {
         stage('Checkout') {
             steps {
@@ -7,12 +13,11 @@ pipeline {
             }
         }
         stage('Build') {
-            steps {
-                // Fix: Ensure `mvnw` has executable permissions
-                sh 'chmod +x ./securePro_structure/mvnw'
-                // Use Maven to build the project
-                sh './securePro_structure/mvnw clean package -DskipTests'
-            }
+                   steps {
+                       script {
+                           sh 'mvn clean package -DskipTests'
+                       }
+                   }
         }
         stage('Docker Build and Push') {
             steps {

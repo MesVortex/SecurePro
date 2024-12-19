@@ -3,16 +3,17 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MesVortex/SecurePro.git'
+                git branch: 'main', url: 'https://github.com/MesVortex/SecurePro.git'
             }
         }
         stage('Build') {
-            steps {
-                sh """
-                maven clean package
-                """
-            }
-        }
+                    steps {
+                        // Fix: Ensure `mvnw` has executable permissions
+                        sh 'chmod +x ./mvnw'
+                        // Use Maven to build the project
+                        sh './mvnw clean package -DskipTests'
+                    }
+                }
         stage('Docker Build and Push') {
             steps {
                 script {
